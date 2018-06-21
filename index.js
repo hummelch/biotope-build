@@ -2,21 +2,28 @@ const localPackage = require('./package.json');
 const log = require('console-emoji');
 log(`:sparkles: Starting Biotope Build (v${localPackage.version}) with :sparkling_heart:for Frontend Developers around the world :sparkles:\n`, 'green');
 
-const gulp = require('gulp');
-const runSequence = require('run-sequence');
+// gulp.task('serve', function(done) {
+//   console.log('Hello world!');
+//   done();
+// });
+
+var Undertaker = require('undertaker');
+var BiotopeRegistry = require('./lib/biotope-registry');
+
+var gulp = new Undertaker(BiotopeRegistry);
+
+
+const runSequence = require('./lib/run-sequence');
 const requireDir = require('require-dir');
 requireDir('./tasks', {recurse: true});
+
 
 // Prevent errors caused by too many listeners in gulp-watch
 require('events').EventEmitter.defaultMaxListeners = 0;
 
-// configure default task
-gulp.task('default', ['serve']);
-
-
 // build templates for development
 gulp.task('build:dev', function (callback) {
-  runSequence(
+  runSequence(gulp,
     'checkDependencies',
     [
       'clean:dev',
@@ -57,61 +64,61 @@ gulp.task('build:dev', function (callback) {
 
 // build templates for production
 gulp.task('build', function (callback) {
-  runSequence(
+  runSequence(gulp
     [
       'clean:dist',
       'build:dev'
     ],
-    [
-      'copy:dev:js'
-    ],
-    [
-      'copy:dist:js',
-      'copy:dist:react',
-      'copy:dist:ts',
-      'copy:dist:flash',
-      'copy:dist:json',
-      'copy:dist:fonts',
-      'copy:dist:resources:img',
-      'copy:dist:components:img',
-      'copy:dist:assets',
-      'copy:dist:css',
-      'copy:dist:mock',
-      'copy:dist:component:mock',
-      'copy:dist:config',
-      'copy:dist:hbs',
-      'copy:dist:bower',
-      'copy:dist:components'
-    ],
-    [
-      'useref'
-    ],
-    [
-      'useref:assets',
-      'image:resources:dist',
-      'image:component:dist',
-      'favicons'
-    ],
-    [
-      'uglify:resources:dist',
-      'uglify:components:dist',
-      'cleanCss:resources:dist',
-      'cleanCss:components:dist'
-    ],
-    [
-      'inject',
-      'clean:useref',
-      'cssstats',
-      'version'
-    ],
-    callback
+  [
+    'copy:dev:js'
+  ],
+  [
+    'copy:dist:js',
+    'copy:dist:react',
+    'copy:dist:ts',
+    'copy:dist:flash',
+    'copy:dist:json',
+    'copy:dist:fonts',
+    'copy:dist:resources:img',
+    'copy:dist:components:img',
+    'copy:dist:assets',
+    'copy:dist:css',
+    'copy:dist:mock',
+    'copy:dist:component:mock',
+    'copy:dist:config',
+    'copy:dist:hbs',
+    'copy:dist:bower',
+    'copy:dist:components'
+  ],
+  [
+    'useref'
+  ],
+  [
+    'useref:assets',
+    'image:resources:dist',
+    'image:component:dist',
+    'favicons'
+  ],
+  [
+    'uglify:resources:dist',
+    'uglify:components:dist',
+    'cleanCss:resources:dist',
+    'cleanCss:components:dist'
+  ],
+  [
+    'inject',
+    'clean:useref',
+    'cssstats',
+    'version'
+  ],
+  callback
   );
 });
 
 
 // serve development templates
 gulp.task('serve', function (callback) {
-  runSequence(
+  runSequence(gulp,
     'build:dev',
     [
       'watch:templates:hb2',
@@ -138,10 +145,21 @@ gulp.task('serve', function (callback) {
 
 // serve production templates
 gulp.task('serve:dist', function (callback) {
-  runSequence(
+  runSequence(gulp,
     'build',
     callback
   );
 });
 
-module.exports = gulp.tasks;
+// configure default task
+gulp.task('default', gulp.series('serve'));
+
+
+
+
+module.exports = BiotopeRegistry;
+
+
+
+
+// module.exports = gulp.tasks;
