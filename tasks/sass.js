@@ -10,16 +10,25 @@ gulp.task('resources:sass', function () {
     const sourcemaps = require('gulp-sourcemaps');
 
     return gulp
-      .src([
-        path.join(config.global.cwd, config.global.src, config.global.resources, 'scss', '**', '*.scss'),
-        `!${path.join(config.global.cwd, config.global.src, config.global.resources, 'scss', '**', '_*.scss')}`
-      ])
+      .src(path.join(
+        config.global.cwd,
+        config.global.src,
+        config.global.resources,
+        'scss',
+        '**',
+        '+(index|index.*).scss'
+      ))
       .pipe(sourcemaps.init())
       .pipe(sass(config.sass).on('error', sass.logError))
       .pipe(postcss([autoprefixer(config.autoprefixer)]))
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(
-        path.join(config.global.cwd, config.global.dev, config.global.resources, 'css')
+        path.join(
+          config.global.cwd,
+          config.global.dev,
+          config.global.resources,
+          'css'
+        )
       ));
   } else {
     const colors = require('colors/safe');
@@ -36,17 +45,28 @@ gulp.task('components:sass', function () {
     const sourcemaps = require('gulp-sourcemaps');
 
     return gulp
-      .src([
-        path.join(config.global.cwd, config.global.src, config.global.components, '**', '*.scss'),
-        `!${path.join(config.global.cwd, config.global.src, config.global.components, '**', '_*.scss')}`
-      ])
+      .src(path.join(
+        config.global.cwd,
+        config.global.src,
+        config.global.components,
+        '**',
+        '+(index|index.*).scss'
+      ))
       .pipe(sourcemaps.init())
       .pipe(sass(config.sass).on('error', sass.logError))
-      .pipe(postcss([autoprefixer(config.autoprefixer)]))
+      .pipe(postcss([
+        autoprefixer(config.autoprefixer)
+      ]))
       .pipe(sourcemaps.write('.'))
       .pipe(
         gulp.dest(
-          path.join(config.global.cwd, config.global.dev, config.global.resources, config.global.components, 'css')
+          path.join(
+            config.global.cwd,
+            config.global.dev,
+            config.global.resources,
+            config.global.components,
+            'css'
+          )
         )
       );
   } else {
@@ -64,8 +84,7 @@ gulp.task('lint:sass', function () {
     return gulp
       .src([
         path.join(config.global.cwd, config.global.src, config.global.resources, 'scss', '**', '*.s+(a|c)ss'),
-        path.join(config.global.cwd, config.global.src, config.global.components, '**', '*.s+(a|c)ss'),
-        `!${path.join(config.global.cwd, config.global.src, config.global.resources, 'scss', '**', '_icons.s+(a|c)ss')}`
+        path.join(config.global.cwd, config.global.src, config.global.components, '**', '*.s+(a|c)ss')
       ])
       .pipe(cached('sass', {optimizeMemory: true}))
       .pipe(sassLint(config.global.sassLint))
