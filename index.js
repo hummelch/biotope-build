@@ -84,7 +84,8 @@ gulp.task('build', function (callback) {
       'copy:dist:components'
     ],
     [
-      'useref'
+      'useref',
+      'static:components:hb2'
     ],
     [
       'useref:assets',

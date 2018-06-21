@@ -16,6 +16,10 @@ const templateGlobPatterns = [
   path.join(config.global.cwd, config.global.src, 'browserSupport.hbs')
 ];
 
+const componentGlobPatterns = [
+  path.join(config.global.cwd, config.global.src, config.global.components, '**', '+(demo|demo.*).hbs')
+];
+
 const partialGlobPatterns = [
   path.join(config.global.cwd, config.global.src, '**', '*.hbs'),
   '!' + path.join(config.global.cwd, config.global.src, 'pages', '**', '*.hbs'),
@@ -172,7 +176,7 @@ const loadIndexrData = () => {
   );
 };
 
-const renderTemplate = templatePath => {
+const renderTemplate = (templatePath, folder='', pretty=false) => {
   const templateContent = templates[templatePath];
 
   // Extend global data with site specific data
@@ -183,11 +187,18 @@ const renderTemplate = templatePath => {
   );
 
   try {
-    const content = templateContent.precompiled(globalData);
+    let content = templateContent.precompiled(globalData);
+
+    if(pretty) {
+      const pretty = require('pretty');
+      content = pretty(content, {ocd: true});
+    }
+
     const parsedPath = path.parse(templatePath);
     const targetPath = path.join(
       config.global.cwd,
       config.global.dev,
+      folder,
       `${parsedPath.name}.html`
     );
 
@@ -212,6 +223,20 @@ gulp.task('init:hb2', cb => {
 gulp.task('static:hb2', cb => {
   for (const templatePath in templates) {
     renderTemplate(templatePath);
+  }
+
+  cb();
+});
+
+gulp.task('static:components:hb2', cb => {
+  const paths = globule.find(componentGlobPatterns);
+
+  for (const filePath of paths) {
+    const parsedPath = path.parse(filePath);
+    const folder = path.relative(path.join(config.global.cwd, config.global.src), parsedPath.dir);
+
+    loadTemplate(filePath);
+    renderTemplate(filePath, folder, true);
   }
 
   cb();
