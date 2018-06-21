@@ -13,26 +13,46 @@ const webpackSourcePatterns = [
     config.global.src,
     config.global.resources,
     '**',
-    '*.ts'
+    'index.ts'
   ),
   path.join(
     config.global.cwd,
     config.global.src,
     config.global.components,
     '**',
-    '*.ts'
-  )
-];
-const webpackWatchPatterns = [
-  ...webpackSourcePatterns,
+    'index.ts'
+  ),
+  path.join(
+    config.global.cwd,
+    config.global.src,
+    config.global.resources,
+    '**',
+    'index.*.ts'
+  ),
   path.join(
     config.global.cwd,
     config.global.src,
     config.global.components,
     '**',
-    '*.scss'
+    'index.*.ts'
   )
 ];
+
+const webpackWatchPatterns = [
+  ...webpackSourcePatterns
+];
+
+if (config.webpack.watchScss) {
+  webpackWatchPatterns.push(
+    path.join(
+      config.global.cwd,
+      config.global.src,
+      config.global.components,
+      '**',
+      '*.scss'
+    )
+  );
+}
 
 gulp.task('webpack:ts', function (cb) {
   if (config.global.tasks.webpack) {
@@ -45,7 +65,7 @@ gulp.task('webpack:ts', function (cb) {
 
     const entryPoints = globule.find(webpackSourcePatterns);
 
-    if(entryPoints.length) {
+    if (entryPoints.length) {
       webpackConfig.entry = {};
 
       for (const entryPoint of entryPoints) {
