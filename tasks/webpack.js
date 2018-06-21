@@ -13,28 +13,14 @@ const webpackSourcePatterns = [
     config.global.src,
     config.global.resources,
     '**',
-    'index.ts'
+    '+(index|index.*).ts'
   ),
   path.join(
     config.global.cwd,
     config.global.src,
     config.global.components,
     '**',
-    'index.ts'
-  ),
-  path.join(
-    config.global.cwd,
-    config.global.src,
-    config.global.resources,
-    '**',
-    'index.*.ts'
-  ),
-  path.join(
-    config.global.cwd,
-    config.global.src,
-    config.global.components,
-    '**',
-    'index.*.ts'
+    '+(index|index.*).ts'
   )
 ];
 
