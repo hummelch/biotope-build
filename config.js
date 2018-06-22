@@ -56,6 +56,10 @@ module.exports = {
     rebase: false
   },
 
+  compatibility: {
+    duplicateEntryFilesWithoutIndex: true
+  },
+
   connect: {
     port: 9000,
     globs: [
