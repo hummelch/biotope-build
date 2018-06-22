@@ -227,6 +227,47 @@ gulp.task('copy:dev:npm:bower', function () {
   );
 });
 
+gulp.task('copy:compatibility:duplicateEntryFilesWithoutIndex', function (cb) {
+  if(config.compatibility.duplicateEntryFilesWithoutIndex) {
+    const rename = require('gulp-rename');
+    const colors = require('colors/safe');
+
+    console.log(colors.yellow('Compatibility Feature active: Scripts and Styles are duplicated without index prefix.'));
+
+    return gulp
+      .src([
+        path.join(
+          config.global.cwd,
+          config.global.dist,
+          config.global.resources,
+          config.global.components,
+          '**',
+          'index.*.+(css|js)'
+        ),
+        path.join(
+          config.global.cwd,
+          config.global.dist,
+          config.global.resources,
+          config.global.components,
+          '**',
+          'index.*.css.map'
+        )
+      ])
+      .pipe(rename((path) => {
+        path.basename = path.basename.replace(/^index\./i, '');
+      }))
+      .pipe(gulp.dest(path.join(
+        config.global.cwd,
+        config.global.dist,
+        config.global.resources,
+        config.global.components
+      )));
+  }
+
+  cb();
+});
+
+
 /**
  * backwards compatibility for bower
  * dist copy task

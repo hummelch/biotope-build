@@ -98,6 +98,7 @@ gulp.task('build', function (callback) {
       'cleanCss:components:dist'
     ],
     [
+      'copy:compatibility:duplicateEntryFilesWithoutIndex',
       'inject',
       'clean:useref',
       'cssstats',
