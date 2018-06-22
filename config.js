@@ -57,7 +57,7 @@ module.exports = {
   },
 
   compatibility: {
-    duplicateEntryFilesWithoutIndex: true
+    duplicateEntryFilesWithoutIndex: false
   },
 
   connect: {

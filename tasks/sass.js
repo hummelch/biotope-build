@@ -64,8 +64,7 @@ gulp.task('components:sass', function () {
             config.global.cwd,
             config.global.dev,
             config.global.resources,
-            config.global.components,
-            'css'
+            config.global.components
           )
         )
       );
