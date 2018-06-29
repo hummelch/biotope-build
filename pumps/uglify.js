@@ -1,6 +1,6 @@
 module.exports = {
   defaultPump: (config) => {
-    const uglify = require('gulp-uglify');
+    const uglify = require('gulp-uglify-es').default;
     const sourcemaps = require('gulp-sourcemaps');
     const noop = require('gulp-noop');
 

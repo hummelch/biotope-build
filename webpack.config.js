@@ -54,8 +54,8 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        loader: 'awesome-typescript-loader',
-        include: generalIncludePaths
+        loader: 'awesome-typescript-loader'
+        // 🔥 include: generalIncludePaths
       },
       {
         test: /\.jsx?$/,
