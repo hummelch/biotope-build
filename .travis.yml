@@ -2,5 +2,6 @@ language: node_js
 node_js:
   - "8"
   - "9"
-install: npm install -g yarn && yarn install
+  - "10"
+install: npm install -g yarn && yarn
 script: yarn test

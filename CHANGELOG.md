@@ -19,6 +19,17 @@
 
 </details>
 
+## [7.0.0-alpha1] - 2019-01-01
+### Added
+- for new features.
+### Changed
+- for changes in existing functionality.
+### Deprecated
+- for soon-to-be removed features.
+### Removed
+- for now removed features.
+### Fixed
+- for any bug fixes.
 
 ## [5.4.0] - 2018-08-17 
 ### Changed
