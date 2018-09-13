@@ -1,22 +1,26 @@
-import { Command } from 'commander';
-
 import * as tsconfigBase from '../../tsconfig.base.json';
-import { webpackInit } from '../webpack';
+import { Action } from './types';
 import { tsc, compilerCallback, getCompiler, CompileOptions } from './compilation';
 
+const configFiles = [
+  '.babelrc.ts',
+  'biotope-build.config.ts',
+  'postcss.config.ts',
+];
+
 const compile = (options: CompileOptions) => {
-  tsc(['./biotope-build.config.ts', '.babelrc.ts', 'postcss.config.ts'], tsconfigBase);
+  tsc(configFiles, tsconfigBase);
 
   if (!options.watch) {
-    getCompiler(options, webpackInit).run(compilerCallback);
+    getCompiler(options).run(compilerCallback(false));
   } else {
     // tslint:disable-next-line:no-console
     console.log('@biotope/build is watching files…\n');
-    getCompiler(options, webpackInit).watch({}, compilerCallback);
+    getCompiler(options).watch({}, compilerCallback(true));
   }
 };
 
-export const registerCompile = (program: Command): Command => program
+export const registerCompile: Action = program => program
   .command('compile')
   .option('-c, --config <file>', 'An extention configuration file')
   .option('-e, --environment <file>', 'The requested environment')

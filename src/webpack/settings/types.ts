@@ -2,14 +2,9 @@ import { Configuration, Rule, Options as WebpackOptions } from 'webpack';
 import { Configuration as FaviconsConfiguration, VariantName } from 'favicons-webpack-plugin';
 import { Options as HtmlOptions } from 'html-webpack-plugin';
 import { Options as PrerenderOptions } from 'prerender-spa-plugin';
-import * as mergeDeep from 'merge-deep';
 
-export type ProjectEnvironment = 'default' | 'local' | 'dev' | 'prod';
+export type ProjectEnvironment = 'local' | 'dev' | 'prod';
 export type NodeEnvironment = 'local' | 'development' | 'production' | 'test';
-
-export interface CommonChunkOptions extends WebpackOptions.CacheGroupsOptions {
-  name: string;
-}
 
 export interface ExternalFile {
   from: string;
@@ -23,10 +18,18 @@ export interface ExternalFile {
   force?: boolean;
 }
 
-export type OverrideFunction = (
-  configuration: Configuration,
-  merge?: typeof mergeDeep,
-) => Configuration;
+export type OverrideFunction = (configuration: Configuration) => Configuration;
+
+export interface EntryPointOption {
+  file: string;
+  template?: string;
+}
+
+export type EntryPointOptionAll = IndexObject<EntryPointOption | string>;
+
+export interface EntryPoint extends EntryPointOption {
+  filename: string;
+}
 
 export interface Options {
   app?: {
@@ -35,36 +38,35 @@ export interface Options {
     keywords?: string[];
     title?: string;
   };
-  environment?: ProjectEnvironment;
+  environment?: NodeEnvironment;
   minify?: boolean;
   overrides?: OverrideFunction;
   paths?: {
     app?: string;
-    buildRelative?: string;
-    dist?: string;
     pagesRelative?: string;
+    assetsRelative?: string;
+    dist?: string;
+    buildRelative?: string;
   };
   runtime?: IndexObjectAny;
   webpack?: {
     alias?: IndexObject<string>;
+    chunks?: WebpackOptions.CacheGroupsOptions[];
     cleanExclusions?: string[];
     disablePlugins?: string[];
-    entryPoints?: IndexObject<string>;
+    entryPoints?: EntryPointOptionAll;
     externalFiles?: (string | ExternalFile)[];
     favicons?: {
       additionalVariants?: VariantName[];
       cache?: boolean;
-      file?: string;
       output?: string;
     };
-    filename?: string;
     output?: {
       script?: string;
       style?: string;
     };
     renderRoutes?: string[];
     rules?: Rule[];
-    template?: string;
   };
 }
 
@@ -72,46 +74,47 @@ export interface Settings {
   app: {
     author: string;
     description: string;
-    filename: string;
     keywords: string;
-    minify?: HtmlOptions['minify'];
-    template: string;
     title: string;
+    minify?: HtmlOptions['minify'];
   };
-  environment: ProjectEnvironment;
+  environment: NodeEnvironment;
   minify: boolean;
   overrides: OverrideFunction;
   paths: {
     app: string;
-    buildRelative: string;
-    dist: string;
+    assetsRelative: string;
     pagesRelative: string;
-    appAbsolute: string;
+    dist: string;
+    buildRelative: string;
     baseAbsolute: string;
+    appAbsolute: string;
+    pagesAbsolute: string;
+    assetsAbsolute: string;
     buildAbsolute: string;
     distAbsolute: string;
   };
   runtime: IndexObjectAny;
   webpack: {
     alias: IndexObject<string>;
+    chunks: WebpackOptions.CacheGroupsOptions[];
     cleanExclusions: string[];
     disablePlugins: string[];
-    entryPoints: IndexObject<string>;
+    entryPoints: IndexObject<EntryPoint>;
     externalFiles: (string | ExternalFile)[];
     favicons: {
       additionalVariants: VariantName[];
       cache: boolean;
       file: string;
-      icons: FaviconsConfiguration['icons'];
       output: string;
+      icons: FaviconsConfiguration['icons'];
     };
     output: {
       script: string;
       style: string;
     };
-    rules: Rule[];
-    commonChunk: CommonChunkOptions;
     rendering: PrerenderOptions;
+    rules: Rule[];
   };
 }
 

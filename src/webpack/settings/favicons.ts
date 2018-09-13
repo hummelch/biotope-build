@@ -1,6 +1,6 @@
 import { VariantName, Variants } from 'favicons-webpack-plugin';
 
-import { Options } from './types';
+import { Options, Settings } from './types';
 
 const allVariants: VariantName[] = [
   'android',
@@ -20,10 +20,10 @@ const listToVariants = (variants: VariantName[], defaultValue: boolean): Variant
     [variant]: defaultValue,
   }), {}) as Variants;
 
-export const getFavicons = (webpack: Options['webpack'] = {}, minify: boolean) => ({
+export const getFavicons = (webpack: Options['webpack'] = {}, paths: Settings['paths'], minify: boolean) => ({
   additionalVariants: (webpack.favicons || {}).additionalVariants || [],
   cache: (webpack.favicons || {}).cache || false,
-  file: (webpack.favicons || {}).file || 'resources/.favicon.png',
+  file: `${paths.assetsAbsolute}/favicon.png`,
   icons: {
     favicons: true,
     ...listToVariants(allVariants, false),

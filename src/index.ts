@@ -3,9 +3,8 @@ import * as commander from 'commander';
 
 import * as actions from './actions';
 
-type Action = (program: commander.Command) => commander.Command;
-type Actions = IndexObject<Action>;
+export { Options } from './webpack';
 
-Object.keys(actions).forEach(key => (actions as Actions)[key](commander));
+Object.keys(actions).forEach(key => (actions as actions.Actions)[key](commander));
 
 commander.parse(process.argv);

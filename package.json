@@ -1,6 +1,6 @@
 {
   "name": "@biotope/buid",
-  "version": "7.0.0-alpha1",
+  "version": "7.0.0-alpha2",
   "description": "An advanced developent and build runtime to create frontent ecosystems",
   "author": "Biotope",
   "license": "MIT",
@@ -15,6 +15,7 @@
   "bin": {
     "biotope-build": "./lib/index.js"
   },
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "test": "echo \"Not implemented yet\"",
@@ -36,7 +37,7 @@
     "babel-plugin-module-resolver": "~3.1",
     "babel-preset-env": "~1.7",
     "clean-webpack-plugin": "~0.1",
-    "commander": "~2.17",
+    "commander": "~2.18",
     "copy-webpack-plugin": "~4.5",
     "css-loader": "~1.0",
     "dotenv": "~6.0",
@@ -53,19 +54,21 @@
     "mini-css-extract-plugin": "~0.4",
     "node-sass": "~4.9",
     "opn": "~5.3",
+    "os": "~0.1",
     "path": "~0.12",
     "postcss-loader": "~3.0",
     "prerender-spa-plugin": "~3.4",
+    "reduce-flatten": "~2.0",
     "sass-loader": "~7.1",
     "stylelint": "~9.5",
     "stylelint-config-recommended-scss": "~3.2",
     "stylelint-config-standard": "~18.2",
     "stylelint-scss": "~3.3",
-    "ts-loader": "~4.5",
+    "ts-loader": "~5.1",
     "tslint": "~5.11",
     "tslint-config-airbnb-base": "~0.2",
     "typescript": "~3.0",
-    "webpack": "~4.17",
+    "webpack": "~4.18",
     "webpack-livereload-plugin": "~2.1"
   }
 }

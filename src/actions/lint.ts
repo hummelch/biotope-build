@@ -1,7 +1,8 @@
 import { existsSync } from 'fs';
 import { resolve } from 'path';
-import { Command } from 'commander';
 import { run } from 'tslint/lib/runner';
+
+import { Action } from './types';
 
 const projectPath = resolve(process.cwd());
 const biotopeBuildPath = resolve(`${projectPath}/node_modules/@biotope/build`);
@@ -60,7 +61,7 @@ const lint = (options: LintOptions) => {
   }
 };
 
-export const registerLint = (program: Command): Command => program
+export const registerLint: Action = program => program
   .command('lint')
   .option('-t, --typescript', 'Lint typescript (*.ts) files')
   .option('-j, --javascript', 'Lint javascript (*.js) files')

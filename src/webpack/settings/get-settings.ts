@@ -2,32 +2,34 @@ import { resolve } from 'path';
 import * as mergeDeep from 'merge-deep';
 import { PuppeteerRenderer as Renderer } from 'prerender-spa-plugin';
 
-import { Options, Settings } from './types';
+import { environments } from './environments';
+import { Options, Settings, EntryPointOption, EntryPointOptionAll } from './types';
 import { getFavicons } from './favicons';
 import { getPaths } from './paths';
 import { getRules } from './rules';
+import { getDotEnv } from './dotenv';
+import { getEntryPoints } from './entry-points';
 
 const defaultKeywords = ['biotope', 'boilerplate', 'modern', 'framework', 'html5'];
 
 export const getSettings = (options: Options): Settings => {
+  const environment = options.environment || environments.default;
   const paths = getPaths(options.paths);
-  const minify = !!options.minify;
-  const webpack = (options.webpack || {});
-  const entryPoints = webpack.entryPoints || {
-    app: 'index.ts',
+  const minify = environment === 'local' ? !!options.minify : true;
+  const app = options.app || {};
+  const webpack = options.webpack || {};
+  const entryPoints: EntryPointOptionAll = webpack.entryPoints || {
+    index: 'index.ts',
   };
+  const dotEnv = getDotEnv(paths);
 
   return {
     app: {
       title: 'Biotope Boilerplate v7',
       description: 'Modern HTML5 UI Framework',
       author: 'Biotope',
-      ...(options.app || {}),
-      keywords: (((options.app || {}).keywords || defaultKeywords)).join(','),
-      filename: resolve(`${paths.distAbsolute}/index.html`),
-      template: resolve(
-        `${paths.baseAbsolute}/${webpack.template || './src/resources/.index.ejs'}`,
-      ),
+      ...app,
+      keywords: (app.keywords || defaultKeywords).join(','),
       ...(minify ? {
         minify: {
           collapseWhitespace: true,
@@ -38,35 +40,45 @@ export const getSettings = (options: Options): Settings => {
         },
       } : {}),
     },
-    environment: options.environment || 'dev',
+    environment,
     minify,
     overrides: options.overrides || (s => s),
     paths,
-    runtime: (options.runtime || {})[options.environment || 'dev'] || options.runtime || {},
+    runtime: mergeDeep({}, (options.runtime || {})[environment] || options.runtime || {}, dotEnv),
     webpack: {
       alias: webpack.alias || {},
+      chunks: webpack.chunks || [
+        {
+          name: 'vendor',
+          test: /[\\/]node_modules[\\/]/,
+          chunks: 'all',
+        },
+        {
+          name: 'common',
+          chunks: 'initial',
+          minChunks: 2,
+        },
+      ],
       cleanExclusions: webpack.cleanExclusions || [],
       disablePlugins: webpack.disablePlugins || [],
       entryPoints: Object.keys(entryPoints).reduce((accumulator, key) => ({
         ...accumulator,
-        [key]: `${paths.pagesRelative}/${entryPoints[key]}`,
+        [key]: getEntryPoints(typeof entryPoints[key] === 'string'
+          ? { file: entryPoints[key] as string }
+          : entryPoints[key] as EntryPointOption, paths),
       }), {}),
-      externalFiles: (webpack.externalFiles || ['./src/resources'])
-        .map(files => typeof files === 'string' ? resolve(files) : ({
-          ...files,
-          from: resolve(files.from),
-        })),
-      favicons: getFavicons(options.webpack, minify),
+      externalFiles: (webpack.externalFiles || [{
+        from: `${paths.appAbsolute}/resources`,
+        to: 'resources',
+      }]).map(files => typeof files === 'string' ? resolve(files) : ({
+        ...files,
+        from: resolve(files.from),
+      })),
+      favicons: getFavicons(options.webpack, paths, minify),
       output: mergeDeep({}, {
         script: '[name].js',
         style: '[name].css',
       }, webpack.output || {}),
-      rules: getRules(minify, webpack.disablePlugins || []),
-      commonChunk: {
-        test: /node_modules/,
-        name: 'vendor',
-        chunks: 'initial',
-      },
       rendering: {
         staticDir: paths.distAbsolute,
         routes: (options.webpack || {}).renderRoutes || ['/'],
@@ -75,6 +87,7 @@ export const getSettings = (options: Options): Settings => {
           args: ['–no-sandbox', '–disable-setuid-sandbox'],
         }),
       },
+      rules: getRules(minify, webpack.disablePlugins || []),
     },
   };
 };

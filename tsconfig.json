@@ -6,6 +6,8 @@
     "outDir": "lib",
 
     "sourceMap": false,
+    "declaration": true,
+    "declarationDir": "lib",
 
     "typeRoots": [
       "typings",
