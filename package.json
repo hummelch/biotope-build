@@ -23,11 +23,11 @@
     "start": "yarn build"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "~7.1",
     "@babel/core": "~7.1",
+    "@babel/plugin-proposal-class-properties": "~7.1",
+    "@babel/polyfill": "~7.0",
     "@babel/preset-env": "~7.1",
     "@babel/preset-typescript": "~7.1",
-    "@babel/polyfill": "~7.0",
     "@types/clean-webpack-plugin": "~0.1",
     "@types/compression-webpack-plugin": "~0.4",
     "@types/copy-webpack-plugin": "~4.4",

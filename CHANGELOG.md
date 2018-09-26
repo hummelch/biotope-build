@@ -19,17 +19,17 @@
 
 </details>
 
-## [7.0.0-alpha1] - 2019-01-01
+## [7.0.0-alpha3.1] - 2019-01-01
 ### Added
-- for new features.
+- TODO.
 ### Changed
-- for changes in existing functionality.
+- TODO.
 ### Deprecated
-- for soon-to-be removed features.
+- TODO.
 ### Removed
-- for now removed features.
+- TODO.
 ### Fixed
-- for any bug fixes.
+- TODO.
 
 ## [5.4.0] - 2018-08-17 
 ### Changed

@@ -8,7 +8,7 @@ import { baseConfig, ifPlugin } from './base.config';
 
 export const config = (options: Options): Configuration => {
   const [configuration, settings] = baseConfig(options);
-  return settings.overrides(mergeDeep({}, configuration, {
+  return settings.overrides(mergeDeep(configuration, {
     plugins: [
       ...ifPlugin(settings, 'extended-define-webpack-plugin', new ExtendedDefinePlugin(
         settings.runtime,

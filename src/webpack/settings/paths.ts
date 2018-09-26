@@ -14,7 +14,7 @@ const pathDefaults = {
 const baseAbsolute = resolve('./');
 
 export const getPaths = (paths: Options['paths'] = {}): Settings['paths'] => {
-  const pathsDefined = mergeDeep({}, pathDefaults, paths);
+  const pathsDefined = mergeDeep(pathDefaults, paths) as Settings['paths'];
   return {
     ...pathsDefined,
     baseAbsolute,

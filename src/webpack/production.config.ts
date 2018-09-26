@@ -11,7 +11,7 @@ export const config = (options: Options): Configuration => {
     ...options,
     minify: true,
   });
-  return settings.overrides(mergeDeep({}, configuration, {
+  return settings.overrides(mergeDeep(configuration, {
     devtool: false,
     mode: 'production',
     optimization: {

@@ -44,7 +44,7 @@ export const getSettings = (options: Options): Settings => {
     minify,
     overrides: options.overrides || (s => s),
     paths,
-    runtime: mergeDeep({}, (options.runtime || {})[environment] || options.runtime || {}, dotEnv),
+    runtime: mergeDeep((options.runtime || {})[environment] || options.runtime || {}, dotEnv),
     webpack: {
       alias: webpack.alias || {},
       chunks: webpack.chunks || [
@@ -76,10 +76,10 @@ export const getSettings = (options: Options): Settings => {
         from: resolve(files.from),
       })),
       favicons: getFavicons(options.webpack, paths, minify),
-      output: mergeDeep({}, {
+      output: mergeDeep({
         script: '[name].js',
         style: '[name].css',
-      }, webpack.output || {}),
+      }, webpack.output || {}) as { script: string; style: string },
       rendering: {
         staticDir: paths.distAbsolute,
         routes: (options.webpack || {}).renderRoutes || ['/'],

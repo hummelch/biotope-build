@@ -5,7 +5,7 @@
     "module": "commonjs",
 
     "sourceMap": true,
-    "noEmitOnError": false,
+    "noEmitOnError": true,
     "declaration": false,
     "removeComments": false,
     "experimentalDecorators": true,
@@ -21,13 +21,15 @@
     "noFallthroughCasesInSwitch": true,
 
     "typeRoots": [
+      "./typings",
       "../../../typings",
       "../../../node_modules/@types"
     ]
   },
-  "exclude": [
-    "../../../.babelrc.ts",
-    "../../../biotope-build.config.ts",
-    "../../../postcss.config.ts"
+  "include": [
+    "../../../typings/global.d.ts",
+    "../../../.*.ts",
+    "../../../*.ts",
+    "../../../src/**/*.ts"
   ]
 }
