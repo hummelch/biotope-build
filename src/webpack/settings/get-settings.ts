@@ -70,6 +70,7 @@ export const getSettings = (options: Options): Settings => {
       externalFiles: (webpack.externalFiles || [{
         from: `${paths.appAbsolute}/resources`,
         to: 'resources',
+        ignore: ['*.md'],
       }]).map(files => typeof files === 'string' ? resolve(files) : ({
         ...files,
         from: resolve(files.from),
@@ -82,7 +83,7 @@ export const getSettings = (options: Options): Settings => {
       rendering: {
         staticDir: paths.distAbsolute,
         routes: (options.webpack || {}).renderRoutes || ['/'],
-        server: { port: 8001 },
+        server: { port: 7999 },
         renderer: new Renderer({
           args: ['–no-sandbox', '–disable-setuid-sandbox'],
         }),

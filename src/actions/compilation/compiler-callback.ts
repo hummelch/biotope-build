@@ -26,6 +26,7 @@ export const compilerCallback = (watch: boolean) => (error: WebpackCompileError,
   }
   if (stats.compilation) {
     if (stats.compilation.errors.length !== 0) {
+      // tslint:disable-next-line:no-console
       stats.compilation.errors.forEach(compilationError => console.error(compilationError.message));
       process.exitCode = 2;
     } else {

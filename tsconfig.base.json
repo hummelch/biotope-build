@@ -18,7 +18,12 @@
     "noImplicitThis": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "typeRoots": [
+      "../../../typings",
+      "../../../node_modules/@types"
+    ]
   },
   "exclude": [
     "../../../.babelrc.ts",

@@ -13,43 +13,17 @@ const babelPath = existsSync(`${projectPath}/.babelrc.js`)
 // tslint:disable-next-line:no-require-imports no-var-requires
 const babelOptions = require(babelPath);
 
-const typescriptExistsBaseConfig = existsSync(`${projectPath}/tsconfig.json`);
-const typescriptExistsProdConfig = existsSync(`${projectPath}/tsconfig.prod.json`);
-const typescriptGetPath = (minify: boolean): string => {
-  if (!minify || (minify && !typescriptExistsProdConfig)) {
-    return typescriptExistsBaseConfig
-      ? `${projectPath}/tsconfig.json`
-      : `${biotopeBuildPath}/tsconfig.base.json`;
-  }
-  return `${biotopeBuildPath}/tsconfig.prod.json`;
-};
-
 const postCssPath = existsSync(`${projectPath}/postcss.config.js`)
   ? `${projectPath}/`
   : `${biotopeBuildPath}/`;
 
 export const getRules = (minify: boolean, disabledPlugins: string[]): Rule[] => ([
   {
-    test: /\.js$/,
+    test: /\.(js|tsx?)$/,
     use: {
       loader: 'babel-loader',
       options: babelOptions,
     },
-  },
-  {
-    test: /\.tsx?$/,
-    use: [
-      {
-        loader: 'babel-loader',
-        options: babelOptions,
-      },
-      {
-        loader: 'ts-loader',
-        options: {
-          configFile: typescriptGetPath(minify),
-        },
-      },
-    ],
   },
   {
     test: /\.scss$/,

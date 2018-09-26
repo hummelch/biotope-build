@@ -1,31 +1,19 @@
 import { existsSync } from 'fs';
 import { resolve } from 'path';
-import { run } from 'tslint/lib/runner';
+import { run as tslint } from 'tslint/lib/runner';
 
 import { Action } from './types';
 
 const projectPath = resolve(process.cwd());
 const biotopeBuildPath = resolve(`${projectPath}/node_modules/@biotope/build`);
 
-const lintFile = existsSync(`${projectPath}/tslint.json`)
-  ? `${projectPath}/tslint.json`
-  : `${biotopeBuildPath}/tslint.json`;
-
-const typescriptExistsBaseConfig = existsSync(`${projectPath}/tsconfig.json`);
-const typescriptExistsProdConfig = existsSync(`${projectPath}/tsconfig.prod.json`);
-const typescriptGetPath = (minify: boolean): string => {
-  if (!minify) {
-    return typescriptExistsBaseConfig
-      ? `${projectPath}/tsconfig.json`
-      : `${biotopeBuildPath}/tsconfig.base.json`;
-  }
-  if (typescriptExistsProdConfig) {
-    return `${projectPath}/tsconfig.prod.json`;
-  }
-  if (typescriptExistsBaseConfig) {
-    return `${biotopeBuildPath}/tsconfig.prod.external.json`;
-  }
-  return `${biotopeBuildPath}/tsconfig.prod.json`;
+const files = {
+  tslint: existsSync(`${projectPath}/tslint.json`)
+    ? `${projectPath}/tslint.json`
+    : `${biotopeBuildPath}/tslint.json`,
+  tsconfig: existsSync(`${projectPath}/tsconfig.json`)
+    ? `${projectPath}/tsconfig.json`
+    : `${biotopeBuildPath}/tsconfig.base.json`,
 };
 
 interface LintOptions {
@@ -37,10 +25,10 @@ interface LintOptions {
 
 const lint = (options: LintOptions) => {
   if (options.typescript) {
-    run({
-      config: lintFile,
-      project: typescriptGetPath(false),
-      files: ['**/*.ts'],
+    tslint({
+      config: files.tslint,
+      project: files.tsconfig,
+      files: ['**/*.{ts,tsx}'],
       exclude: ['**/node_modules/**'],
       fix: !!options.fix,
       format: 'verbose',
