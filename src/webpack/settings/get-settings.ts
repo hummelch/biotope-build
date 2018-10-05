@@ -88,7 +88,7 @@ export const getSettings = (options: Options): Settings => {
           args: ['–no-sandbox', '–disable-setuid-sandbox'],
         }),
       },
-      rules: getRules(minify, webpack.disablePlugins || []),
+      rules: getRules(minify, webpack.disablePlugins || [], webpack.compileExclusions || []),
     },
   };
 };

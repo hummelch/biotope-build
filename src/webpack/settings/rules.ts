@@ -17,13 +17,20 @@ const postCssPath = existsSync(`${projectPath}/postcss.config.js`)
   ? `${projectPath}/`
   : `${biotopeBuildPath}/`;
 
-export const getRules = (minify: boolean, disabledPlugins: string[]): Rule[] => ([
+export const getRules = (
+  minify: boolean,
+  disabledPlugins: string[],
+  compileExclusions: string[],
+): Rule[] => ([
   {
     test: /\.(js|tsx?)$/,
     use: {
       loader: 'babel-loader',
       options: babelOptions,
     },
+    ...(compileExclusions.length
+      ? { exclude: new RegExp(`node_modules/(${compileExclusions.join('|')})`) }
+      : {}),
   },
   {
     test: /\.scss$/,
@@ -46,5 +53,9 @@ export const getRules = (minify: boolean, disabledPlugins: string[]): Rule[] => 
       },
       'sass-loader',
     ],
+  },
+  {
+    test: /\.svg/,
+    use: 'raw-loader',
   },
 ]);

@@ -4,6 +4,7 @@ export declare const getFavicons: (webpack: {
     alias?: IndexObject<string> | undefined;
     chunks?: import("webpack").Options.CacheGroupsOptions[] | undefined;
     cleanExclusions?: string[] | undefined;
+    compileExclusions?: string[] | undefined;
     disablePlugins?: string[] | undefined;
     entryPoints?: IndexObject<string | import("./types").EntryPointOption> | undefined;
     externalFiles?: (string | import("./types").ExternalFile)[] | undefined;

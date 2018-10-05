@@ -53,6 +53,7 @@ export interface Options {
     alias?: IndexObject<string>;
     chunks?: WebpackOptions.CacheGroupsOptions[];
     cleanExclusions?: string[];
+    compileExclusions?: string[];
     disablePlugins?: string[];
     entryPoints?: EntryPointOptionAll;
     externalFiles?: (string | ExternalFile)[];
