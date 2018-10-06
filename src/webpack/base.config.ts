@@ -84,7 +84,7 @@ export const baseConfig = (options: Options): [Configuration, Settings] => {
       })),
     ],
     resolve: {
-      extensions: ['.ts', '.js', '.scss'],
+      extensions: ['.ts', '.tsx', '.js', '.scss'],
       alias: settings.webpack.alias,
       modules: [
         settings.paths.appAbsolute,

@@ -7,3 +7,4 @@ declare interface IndexObjectAny extends IndexObject<any> {}
 
 declare module '*.style';
 declare module '*.json';
+declare module '*.svg';

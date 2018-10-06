@@ -4,9 +4,7 @@ import { EntryPointOption, Settings, EntryPoint } from './types';
 
 export const getEntryPoints = (entryPoint: EntryPointOption, paths: Settings['paths']): EntryPoint => {
   let filename = '';
-  const tests = [/\.ts$/, /\.tsx$/, /\.js$/];
-
-  tests.some((regex) => {
+  [/\.ts$/, /\.tsx$/, /\.js$/].some((regex) => {
     if (regex.test(entryPoint.file)) {
       filename = entryPoint.file.replace(regex, '');
       return true;
