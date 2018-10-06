@@ -9,33 +9,35 @@ interface WebpackCompileError extends Error {
 
 let firstTimeFinish = true;
 
-export const compilerCallback = (watch: boolean) => (error: WebpackCompileError, stats: Stats) => {
-  if (firstTimeFinish && watch) {
-    firstTimeFinish = false;
-    serve({ open: true });
-  }
+export const compilerCallback = (watch: boolean = false, spa: boolean = false) =>
+  (error: WebpackCompileError, stats: Stats) => {
+    if (firstTimeFinish && watch) {
+      firstTimeFinish = false;
+      serve({ open: true, spa });
+    }
 
-  if (error) {
-    // tslint:disable-next-line:no-console
-    console.error(error.stack || error);
-    if (error.details) {
+    if (error) {
       // tslint:disable-next-line:no-console
-      console.error(error.details);
+      console.error(error.stack || error);
+      if (error.details) {
+        // tslint:disable-next-line:no-console
+        console.error(error.details);
+      }
+      process.exit(1);
     }
-    process.exit(1);
-  }
-  if (stats.compilation) {
-    if (stats.compilation.errors.length !== 0) {
-      // tslint:disable-next-line:no-console
-      stats.compilation.errors.forEach(compilationError => console.error(compilationError.message));
-      process.exitCode = 2;
-    } else {
-      // tslint:disable-next-line:no-console
-      console.log(stats.toString({
-        colors: true,
-        cached: false,
-        cachedAssets: false,
-      }));
+    if (stats.compilation) {
+      if (stats.compilation.errors.length !== 0) {
+        stats.compilation.errors
+        // tslint:disable-next-line:no-console
+          .forEach(compilationError => console.error(compilationError.message));
+        process.exitCode = 2;
+      } else {
+        // tslint:disable-next-line:no-console
+        console.log(stats.toString({
+          colors: true,
+          cached: false,
+          cachedAssets: false,
+        }));
+      }
     }
-  }
-};
+  };

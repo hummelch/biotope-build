@@ -12,11 +12,11 @@ const compile = (options: CompileOptions) => {
   tsc(configFiles, tsconfigBase);
 
   if (!options.watch) {
-    getCompiler(options).run(compilerCallback(false));
+    getCompiler(options).run(compilerCallback());
   } else {
     // tslint:disable-next-line:no-console
-    console.log('@biotope/build is watching files…\n');
-    getCompiler(options).watch({}, compilerCallback(true));
+    console.log('@biotope/build is watching the files…\n');
+    getCompiler(options).watch({}, compilerCallback(true, options.spa));
   }
 };
 
@@ -25,4 +25,5 @@ export const registerCompile: Action = program => program
   .option('-c, --config <file>', 'An extention configuration file')
   .option('-e, --environment <file>', 'The requested environment')
   .option('-w, --watch', 'Watches files and recompiles them')
+  .option('-s, --spa', 'Single-page application when watching (must contain an index.html file in root)')
   .action(compile);
