@@ -51,7 +51,12 @@ export const getRules = (
           config: { path: postCssPath },
         },
       },
-      'sass-loader',
+      {
+        loader: 'sass-loader',
+        options: {
+          data: `$__env:${process.env.NODE_ENV};`,
+        },
+      },
     ],
   },
   {
