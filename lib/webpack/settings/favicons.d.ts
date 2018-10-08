@@ -7,6 +7,7 @@ export declare const getFavicons: (webpack: {
     compileExclusions?: string[] | undefined;
     disablePlugins?: string[] | undefined;
     entryPoints?: IndexObject<string | import("./types").EntryPointOption> | undefined;
+    extensions?: string[] | undefined;
     externalFiles?: (string | import("./types").ExternalFile)[] | undefined;
     favicons?: {
         additionalVariants?: VariantName[] | undefined;
@@ -25,6 +26,7 @@ export declare const getFavicons: (webpack: {
     pagesRelative: string;
     dist: string;
     buildRelative: string;
+    server: string;
     baseAbsolute: string;
     appAbsolute: string;
     pagesAbsolute: string;

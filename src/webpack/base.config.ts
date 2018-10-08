@@ -27,7 +27,7 @@ export const baseConfig = (options: Options): [Configuration, Settings] => {
     output: {
       path: settings.paths.buildAbsolute,
       filename: settings.webpack.output.script,
-      publicPath: `/${settings.paths.buildRelative}`,
+      publicPath: `${settings.paths.server}${settings.paths.buildRelative}`,
     },
     optimization: {
       minimize: false,
@@ -84,7 +84,7 @@ export const baseConfig = (options: Options): [Configuration, Settings] => {
       })),
     ],
     resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.scss'],
+      extensions: settings.webpack.extensions,
       alias: settings.webpack.alias,
       modules: [
         settings.paths.appAbsolute,

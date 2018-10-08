@@ -4,12 +4,14 @@ export declare const getPaths: (paths?: {
     assetsRelative?: string | undefined;
     dist?: string | undefined;
     buildRelative?: string | undefined;
+    serverPrefixRuntimeKey?: string | undefined;
 } | undefined) => {
     app: string;
     assetsRelative: string;
     pagesRelative: string;
     dist: string;
     buildRelative: string;
+    server: string;
     baseAbsolute: string;
     appAbsolute: string;
     pagesAbsolute: string;

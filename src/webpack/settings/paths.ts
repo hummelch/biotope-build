@@ -17,6 +17,7 @@ export const getPaths = (paths: Options['paths'] = {}): Settings['paths'] => {
   const pathsDefined = mergeDeep(pathDefaults, paths) as Settings['paths'];
   return {
     ...pathsDefined,
+    server: '/',
     baseAbsolute,
     appAbsolute: resolve(`${baseAbsolute}/${pathsDefined.app}`),
     assetsAbsolute: resolve(`${baseAbsolute}/${pathsDefined.app}/${pathsDefined.assetsRelative}`),

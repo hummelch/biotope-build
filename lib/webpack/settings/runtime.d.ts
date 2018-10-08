@@ -1,5 +1,5 @@
-import { EntryPointOption, EntryPoint } from './types';
-export declare const getEntryPoints: (entryPoint: EntryPointOption, paths: {
+import { NodeEnvironment } from './types';
+export declare const getRuntime: (runtime: IndexObjectAny, environment: NodeEnvironment, paths: {
     app: string;
     assetsRelative: string;
     pagesRelative: string;
@@ -12,4 +12,4 @@ export declare const getEntryPoints: (entryPoint: EntryPointOption, paths: {
     assetsAbsolute: string;
     buildAbsolute: string;
     distAbsolute: string;
-}) => EntryPoint;
+}) => IndexObjectAny;

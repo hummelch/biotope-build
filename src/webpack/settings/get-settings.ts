@@ -7,21 +7,25 @@ import { Options, Settings, EntryPointOption, EntryPointOptionAll } from './type
 import { getFavicons } from './favicons';
 import { getPaths } from './paths';
 import { getRules } from './rules';
-import { getDotEnv } from './dotenv';
+import { getRuntime } from './runtime';
 import { getEntryPoints } from './entry-points';
 
 const defaultKeywords = ['biotope', 'boilerplate', 'modern', 'framework', 'html5'];
 
 export const getSettings = (options: Options): Settings => {
   const environment = options.environment || environments.default;
-  const paths = getPaths(options.paths);
   const minify = environment === 'local' ? !!options.minify : true;
+
+  const paths = getPaths(options.paths);
+  const runtime = getRuntime(options.runtime || {}, environment, paths);
+  const serverRuntimeKey = (options.paths || {}).serverPrefixRuntimeKey;
+  paths.server = serverRuntimeKey ? runtime[serverRuntimeKey] : paths.server;
+
   const app = options.app || {};
   const webpack = options.webpack || {};
   const entryPoints: EntryPointOptionAll = webpack.entryPoints || {
     index: 'index.ts',
   };
-  const dotEnv = getDotEnv(paths);
 
   return {
     app: {
@@ -44,7 +48,7 @@ export const getSettings = (options: Options): Settings => {
     minify,
     overrides: options.overrides || (s => s),
     paths,
-    runtime: mergeDeep((options.runtime || {})[environment] || options.runtime || {}, dotEnv),
+    runtime,
     webpack: {
       alias: webpack.alias || {},
       chunks: webpack.chunks || [
@@ -67,6 +71,7 @@ export const getSettings = (options: Options): Settings => {
           ? { file: entryPoints[key] as string }
           : entryPoints[key] as EntryPointOption, paths),
       }), {}),
+      extensions: webpack.extensions || ['.ts', '.js', '.scss'],
       externalFiles: (webpack.externalFiles || [{
         from: `${paths.appAbsolute}/resources`,
         to: 'resources',

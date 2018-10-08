@@ -47,6 +47,7 @@ export interface Options {
     assetsRelative?: string;
     dist?: string;
     buildRelative?: string;
+    serverPrefixRuntimeKey?: string;
   };
   runtime?: IndexObjectAny;
   webpack?: {
@@ -56,6 +57,7 @@ export interface Options {
     compileExclusions?: string[];
     disablePlugins?: string[];
     entryPoints?: EntryPointOptionAll;
+    extensions?: string[];
     externalFiles?: (string | ExternalFile)[];
     favicons?: {
       additionalVariants?: VariantName[];
@@ -88,6 +90,7 @@ export interface Settings {
     pagesRelative: string;
     dist: string;
     buildRelative: string;
+    server: string;
     baseAbsolute: string;
     appAbsolute: string;
     pagesAbsolute: string;
@@ -102,6 +105,7 @@ export interface Settings {
     cleanExclusions: string[];
     disablePlugins: string[];
     entryPoints: IndexObject<EntryPoint>;
+    extensions: string[];
     externalFiles: (string | ExternalFile)[];
     favicons: {
       additionalVariants: VariantName[];
