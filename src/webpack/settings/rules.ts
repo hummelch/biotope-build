@@ -41,6 +41,7 @@ export const getRules = (
         options: {
           modules: true,
           importLoaders: 1,
+          url: false,
           minimize: minify,
           localIdentName: minify ? '[hash:base64:24]' : '[path][name]-[local]',
         },
