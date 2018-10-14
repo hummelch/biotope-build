@@ -1,3 +1,4 @@
+/// <reference types="webpack-dev-server" />
 import { Configuration, Plugin } from 'webpack';
 import { Options, Settings } from './settings';
 export declare const ifPlugin: (settings: Settings, plugin: string, value: Plugin) => Plugin[];

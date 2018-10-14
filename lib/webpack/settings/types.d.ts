@@ -1,3 +1,4 @@
+/// <reference types="webpack-dev-server" />
 import { Configuration, Rule, Options as WebpackOptions } from 'webpack';
 import { Configuration as FaviconsConfiguration, VariantName } from 'favicons-webpack-plugin';
 import { Options as HtmlOptions } from 'html-webpack-plugin';

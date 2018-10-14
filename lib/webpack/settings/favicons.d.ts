@@ -1,4 +1,5 @@
 /// <reference types="webpack" />
+/// <reference types="webpack-dev-server" />
 import { VariantName } from 'favicons-webpack-plugin';
 export declare const getFavicons: (webpack: {
     alias?: IndexObject<string> | undefined;

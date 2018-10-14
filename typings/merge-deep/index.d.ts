@@ -1,5 +1,5 @@
 
 declare module 'merge-deep' {
-  const mergeDeep: (first: IndexObjectAny, second: IndexObjectAny) => IndexObjectAny;
+  const mergeDeep: <T>(first: T, second: IndexObjectAny) => T;
   export = mergeDeep;
 }

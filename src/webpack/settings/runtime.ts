@@ -18,7 +18,7 @@ const filterEnvironments = (runtimeVariables: IndexObjectAny) => Object.keys(run
   .reduce((accumulator, key) => ({
     ...accumulator,
     [key]: runtimeVariables[key],
-  }), {});
+  }), {}) as IndexObjectAny;
 
 export const getRuntime = (
   runtime: IndexObjectAny,
