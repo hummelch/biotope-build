@@ -7,6 +7,7 @@
 
     "sourceMap": false,
     "declaration": true,
+    "removeComments": true,
     "declarationDir": "lib",
 
     "typeRoots": [

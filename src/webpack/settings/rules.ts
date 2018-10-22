@@ -3,8 +3,7 @@ import { resolve } from 'path';
 import { Rule } from 'webpack';
 import { loader as ExtractLoader } from 'mini-css-extract-plugin';
 
-const projectPath = resolve(process.cwd());
-const biotopeBuildPath = resolve(`${projectPath}/node_modules/@biotope/build`);
+import { projectPath, biotopeBuildPath } from './project-paths';
 
 const babelPath = existsSync(`${projectPath}/.babelrc.js`)
   ? `${projectPath}/.babelrc.js`
@@ -35,6 +34,9 @@ export const getRules = (
   {
     test: /\.scss$/,
     use: [
+      {
+        loader: resolve(`${biotopeBuildPath}/lib/webpack/settings/style-loader`),
+      },
       ...(disabledPlugins.indexOf('mini-css-extract-plugin') < 0 ? [ExtractLoader] : []),
       {
         loader: 'css-loader',
