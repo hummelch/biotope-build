@@ -34,7 +34,8 @@ gulp.task('build:dev', function (callback) {
       'copy:dev:npm:js',
       'copy:dev:npm:css',
       'copy:dev:npm:bower',
-      'init:hb2'
+      'init:hb2',
+      'createComponentList'
     ],
     [
       'handlebars'
