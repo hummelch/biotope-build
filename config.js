@@ -76,6 +76,16 @@ module.exports = {
     ]
   },
 
+  createComponentList: {
+    path : './src',
+    fileName: 'package.json',
+    fallbackEntryPointName: 'index.html',
+    outputFileName: 'componentList.json',
+    componentJSON: {
+      componentList: componentList
+    }
+  },
+
   cssstats: {
     exit: true
   },

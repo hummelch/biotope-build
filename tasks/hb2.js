@@ -11,10 +11,12 @@ const templates = {};
 const globalData = {};
 
 const templateGlobPatterns = [
-  path.join(config.global.cwd, config.global.src, 'pages', '**', '*.hbs'),
-  path.join(config.global.cwd, config.global.src, 'index.hbs'),
-  path.join(config.global.cwd, config.global.src, 'browserSupport.hbs')
+  path.join(config.global.cwd, config.global.src, 'browserSupport.hbs'),
+  path.join(config.global.cwd, config.global.src, 'index.hbs')
 ];
+config.createComponentList.componentListObject.componentList.componentList.forEach((element) => {
+   templateGlobPatterns.push((path.join(config.global.cwd, element.biotope.path)));
+ });
 
 const partialGlobPatterns = [
   path.join(config.global.cwd, config.global.src, '**', '*.hbs'),

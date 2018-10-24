@@ -24,6 +24,9 @@ gulp.task('build:dev', function (callback) {
       'clean:svgSprite'
     ],
     [
+      'createComponentList'
+    ],
+    [
       'lint:resources:sass',
       'lint:components:sass',
       'lint:json',
@@ -34,8 +37,7 @@ gulp.task('build:dev', function (callback) {
       'copy:dev:npm:js',
       'copy:dev:npm:css',
       'copy:dev:npm:bower',
-      'init:hb2',
-      'createComponentList'
+      'init:hb2'
     ],
     [
       'handlebars'
