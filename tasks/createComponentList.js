@@ -14,8 +14,11 @@ gulp.task('createComponentList', function () {
             componentList.push(componentData);
         });
     }).end(() => {
-        config.createComponentList.componentListObject.componentList = JSON.stringify(componentList);
-        fs.writeFile(config.createComponentList.outputFileName, config.createComponentList.componentListObject.componentList, 'utf8', (err) => {
+        let componentListObject = {
+            componentList: []
+        }
+        componentListObject.componentList = JSON.stringify(componentList);
+        fs.writeFile(config.createComponentList.outputFileName, componentListObject, 'utf8', (err) => {
             if (err) throw err;
         });
     });

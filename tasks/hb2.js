@@ -10,15 +10,13 @@ const handlebars = require('handlebars');
 const templates = {};
 const globalData = {};
 
-const templateGlobPatterns = [
+let templateGlobPatterns = [
+  path.join(config.global.cwd, config.global.src, 'pages', '*.hbs'),
   path.join(config.global.cwd, config.global.src, 'browserSupport.hbs'),
   path.join(config.global.cwd, config.global.src, 'index.hbs')
 ];
-config.createComponentList.componentListObject.componentList.componentList.forEach((element) => {
-   templateGlobPatterns.push((path.join(config.global.cwd, element.biotope.path)));
- });
 
-const partialGlobPatterns = [
+let partialGlobPatterns = [
   path.join(config.global.cwd, config.global.src, '**', '*.hbs'),
   '!' + path.join(config.global.cwd, config.global.src, 'pages', '**', '*.hbs'),
   '!' + path.join(config.global.cwd, config.global.src, 'index.hbs'),
@@ -34,7 +32,13 @@ const iconGlobPatterns = [
 ];
 
 const loadTemplates = () => {
+  config.createComponentList.componentListObject.componentList.forEach((element) => {
+    templateGlobPatterns.push(path.join(config.global.cwd, element.biotope.path));
+    partialGlobPatterns.push('!'+ path.join(config.global.cwd, element.biotope.path));
+  });
+  console.log(templateGlobPatterns);
   const paths = globule.find(templateGlobPatterns);
+  console.log(paths);
 
   for (const filePath of paths) {
     loadTemplate(filePath);
@@ -56,8 +60,9 @@ const removeTemplate = filePath => {
 };
 
 const loadPartials = () => {
+  console.log(partialGlobPatterns);
   const paths = globule.find(partialGlobPatterns);
-
+  console.log(paths);
   for (const filePath of paths) {
     loadPartial(filePath);
   }
@@ -202,7 +207,9 @@ const renderTemplate = templatePath => {
 
   try {
     const content = templateContent.precompiled(globalData);
+    console.log(templatePath);
     const parsedPath = path.parse(templatePath);
+    console.log(parsedPath);
     const targetPath = path.join(
       config.global.cwd,
       config.global.dev,

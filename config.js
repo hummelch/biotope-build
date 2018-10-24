@@ -80,10 +80,7 @@ module.exports = {
     path : './src',
     fileName: 'package.json',
     fallbackEntryPointName: 'index.html',
-    outputFileName: 'componentList.json',
-    componentJSON: {
-      componentList: componentList
-    }
+    outputFileName: 'componentList.json'
   },
 
   cssstats: {
