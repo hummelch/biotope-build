@@ -3,8 +3,8 @@ const config = require('./../config');
 let find = require('find');
 let fs = require('fs');
 
-gulp.task('createComponentList', function () {
-    let componentList = []
+gulp.task('createComponentList', function (eb) {
+    let componentList = [];
     find.eachfile(config.createComponentList.fileName, config.createComponentList.path, file => {
         fs.readFile(file,  (err, data) => {
             if (err) throw err;
@@ -14,12 +14,11 @@ gulp.task('createComponentList', function () {
             componentList.push(componentData);
         });
     }).end(() => {
-        let componentListObject = {
-            componentList: []
-        }
-        componentListObject.componentList = JSON.stringify(componentList);
-        fs.writeFile(config.createComponentList.outputFileName, componentListObject, 'utf8', (err) => {
+        config.createComponentList.componentListObject.componentList = componentList;
+        fs.writeFile(config.createComponentList.outputFileName, JSON.stringify(config.createComponentList.componentListObject.componentList), 'utf8', (err) => {
             if (err) throw err;
         });
+        eb();
     });
+
 });

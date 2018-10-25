@@ -11,7 +11,6 @@ const templates = {};
 const globalData = {};
 
 let templateGlobPatterns = [
-  path.join(config.global.cwd, config.global.src, 'pages', '*.hbs'),
   path.join(config.global.cwd, config.global.src, 'browserSupport.hbs'),
   path.join(config.global.cwd, config.global.src, 'index.hbs')
 ];
@@ -32,22 +31,41 @@ const iconGlobPatterns = [
 ];
 
 const loadTemplates = () => {
-  config.createComponentList.componentListObject.componentList.forEach((element) => {
-    templateGlobPatterns.push(path.join(config.global.cwd, element.biotope.path));
-    partialGlobPatterns.push('!'+ path.join(config.global.cwd, element.biotope.path));
-  });
-  console.log(templateGlobPatterns);
-  const paths = globule.find(templateGlobPatterns);
-  console.log(paths);
+    pathWithBioObject = {};
+    templateGlobPatterns = globule.find(templateGlobPatterns);
+    templateGlobPatterns.forEach((element) => {
+      pathWithBioObject[element] = {biotope: {isComponent: false}};
+    });
 
-  for (const filePath of paths) {
-    loadTemplate(filePath);
+    config.createComponentList.componentListObject.componentList.forEach((element) => {
+    const componentPath = path.join(config.global.cwd, element.biotope.path);
+    const cleanComponentPath = globule.find(componentPath);
+    if(cleanComponentPath.length) {
+      pathWithBioObject[cleanComponentPath] = element;
+
+    }
+    templateGlobPatterns.push(componentPath);
+    //partialGlobPatterns.push('!' + componentPath);
+  });
+  
+
+  for (var key in pathWithBioObject) {
+    loadTemplate(key, pathWithBioObject[key].biotope);
   }
+  
 };
 
-const loadTemplate = filePath => {
-  const frontMatter = require('front-matter');
-  templates[filePath] = frontMatter(fs.readFileSync(filePath, 'utf8'));
+const loadTemplate = (filePath, bioObject) => {
+  if(bioObject.hasOwnProperty('isComponent')) {
+    const frontMatter = require('front-matter');
+    templates[filePath] = frontMatter(fs.readFileSync(filePath, 'utf8'));
+    templates[filePath].outputName = templates[filePath].attributes.title;
+  } else {
+    const componentPath = bioObject.path.replace('src/', '').replace('.hbs', '');
+    templates[filePath] = {'title': bioObject.componentName, 'description': bioObject.description, 'outputName': bioObject.category + '.' + bioObject.componentName}
+    templates[filePath].body = '{{> '+ bioObject.layout +'\r\n\tcontentMain=\"' + componentPath + '\"\r\n}}\r\n';
+  }
+
   templates[filePath].precompiled = handlebars.compile(
     templates[filePath].body
   );
@@ -60,9 +78,7 @@ const removeTemplate = filePath => {
 };
 
 const loadPartials = () => {
-  console.log(partialGlobPatterns);
   const paths = globule.find(partialGlobPatterns);
-  console.log(paths);
   for (const filePath of paths) {
     loadPartial(filePath);
   }
@@ -199,7 +215,7 @@ const renderTemplate = templatePath => {
   const templateContent = templates[templatePath];
 
   // Extend global data with site specific data
-  nestedProp.set(
+   nestedProp.set(
     globalData,
     [config.global.dataObject, config.frontMatter.property].join('.'),
     templateContent.attributes
@@ -207,13 +223,11 @@ const renderTemplate = templatePath => {
 
   try {
     const content = templateContent.precompiled(globalData);
-    console.log(templatePath);
     const parsedPath = path.parse(templatePath);
-    console.log(parsedPath);
     const targetPath = path.join(
       config.global.cwd,
       config.global.dev,
-      `${parsedPath.name}.html`
+      `${templateContent.outputName}.html`
     );
 
     fs.ensureDirSync(path.parse(targetPath).dir);
