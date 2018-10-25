@@ -11,6 +11,7 @@ gulp.task('createComponentList', function (eb) {
             let componentData = JSON.parse(data.toString());
             file = file.replace(config.createComponentList.fileName, '').replace(/\\/g, '/');
             componentData.biotope.path = file + (componentData.biotope.entryPoint || config.createComponentList.fallbackEntryPointName);
+            componentData.biotope.url = (componentData.biotope.category).toLowerCase() + '.' + componentData.biotope.componentName + '.html';
             componentList.push(componentData);
         });
     }).end(() => {

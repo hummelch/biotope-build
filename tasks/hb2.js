@@ -62,7 +62,7 @@ const loadTemplate = (filePath, bioObject) => {
     templates[filePath].outputName = templates[filePath].attributes.title;
   } else {
     const componentPath = bioObject.path.replace('src/', '').replace('.hbs', '');
-    templates[filePath] = {'title': bioObject.componentName, 'description': bioObject.description, 'outputName': bioObject.category + '.' + bioObject.componentName}
+    templates[filePath] = {'title': bioObject.componentName, 'description': bioObject.description, 'outputName': (bioObject.category).toLowerCase() + '.' + bioObject.componentName}
     templates[filePath].body = '{{> '+ bioObject.layout +'\r\n\tcontentMain=\"' + componentPath + '\"\r\n}}\r\n';
   }
 
