@@ -34,23 +34,23 @@ const loadTemplates = () => {
     pathWithBioObject = {};
     templateGlobPatterns = globule.find(templateGlobPatterns);
     templateGlobPatterns.forEach((element) => {
-      pathWithBioObject[element] = {biotope: {isComponent: false}};
+      pathWithBioObject[element] = {isComponent: false};
     });
 
-    config.createComponentList.componentListObject.componentList.forEach((element) => {
-    const componentPath = path.join(config.global.cwd, element.biotope.path);
-    const cleanComponentPath = globule.find(componentPath);
-    if(cleanComponentPath.length) {
-      pathWithBioObject[cleanComponentPath] = element;
+    const componentList = config.createComponentList.componentListObject;
+    for (var element in config.createComponentList.componentListObject) {
+      const componentPath = path.join(config.global.cwd, componentList[element].path);
+      const cleanComponentPath = globule.find(componentPath);
+      if(cleanComponentPath.length) {
+        pathWithBioObject[cleanComponentPath] = componentList[element];
 
     }
     templateGlobPatterns.push(componentPath);
-    //partialGlobPatterns.push('!' + componentPath);
-  });
+  }
   
 
   for (var key in pathWithBioObject) {
-    loadTemplate(key, pathWithBioObject[key].biotope);
+    loadTemplate(key, pathWithBioObject[key]);
   }
   
 };
@@ -137,6 +137,15 @@ const loadJsonData = () => {
   if (config.browserSupport.file) {
     try {
       const browserSupportData = require(config.browserSupport.file);
+      nestedProp.set(
+        globalData,
+        config.browserSupport.property,
+        browserSupportData
+      );
+    } catch (e) { }
+
+    try {
+      const componentListData = require(config.browserSupport.file);
       nestedProp.set(
         globalData,
         config.browserSupport.property,
@@ -321,7 +330,7 @@ gulp.task('watch:jsons:hb2', () => {
       loadJsonFile(vinyl.path);
     }
 
-    runSequence('static:hb2', 'livereload');
+    runSequence('static:hb2', 'livereload','createComponentList');
   });
 });
 
