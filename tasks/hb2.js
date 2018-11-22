@@ -34,23 +34,23 @@ const loadTemplates = () => {
     pathWithBioObject = {};
     templateGlobPatterns = globule.find(templateGlobPatterns);
     templateGlobPatterns.forEach((element) => {
-      pathWithBioObject[element] = {isComponent: false};
+      pathWithBioObject[element] = {biotope: {isComponent: false}};
     });
 
-    const componentList = config.createComponentList.componentListObject;
-    for (var element in config.createComponentList.componentListObject) {
-      const componentPath = path.join(config.global.cwd, componentList[element].path);
-      const cleanComponentPath = globule.find(componentPath);
-      if(cleanComponentPath.length) {
-        pathWithBioObject[cleanComponentPath] = componentList[element];
+    config.createComponentList.componentListObject.componentList.forEach((element) => {
+    const componentPath = path.join(config.global.cwd, element.biotope.path);
+    const cleanComponentPath = globule.find(componentPath);
+    if(cleanComponentPath.length) {
+      pathWithBioObject[cleanComponentPath] = element;
 
     }
     templateGlobPatterns.push(componentPath);
-  }
+    //partialGlobPatterns.push('!' + componentPath);
+  });
   
 
   for (var key in pathWithBioObject) {
-    loadTemplate(key, pathWithBioObject[key]);
+    loadTemplate(key, pathWithBioObject[key].biotope);
   }
   
 };
@@ -62,13 +62,28 @@ const loadTemplate = (filePath, bioObject) => {
     templates[filePath].outputName = templates[filePath].attributes.title;
   } else {
     const componentPath = bioObject.path.replace('src/', '').replace('.hbs', '');
-    templates[filePath] = {'title': bioObject.componentName, 'description': bioObject.description, 'outputName': (bioObject.category).toLowerCase() + '.' + bioObject.componentName}
+    templates[filePath] = {'title': bioObject.componentName, 'description': bioObject.description, 'outputName': (bioObject.category).toLowerCase() + '.' + bioObject.componentName};
     templates[filePath].body = '{{> '+ bioObject.layout +'\r\n\tcontentMain=\"' + componentPath + '\"\r\n}}\r\n';
+    const completeComponentPath = filePath.substr(0, filePath.lastIndexOf('/'));
+    const componentRootPath = componentPath.substr(0, componentPath.lastIndexOf('/'));
+
+    bioObject.componentVariants.forEach((variant) => {
+      const cleanFileName = variant.file.replace('.hbs', '');
+      const variantPath = componentRootPath + '/' + variant.file.replace('.hbs', '');
+      const mergedVariantPath = completeComponentPath + '/' + cleanFileName;
+      templates[mergedVariantPath] = {'title': variant.name, 'description': variant.description, 'outputName': (bioObject.category).toLowerCase() + '.' + bioObject.componentName + '-' + cleanFileName.split('/')[cleanFileName.split('/').length-1]};
+      templates[mergedVariantPath].body = '{{> '+ bioObject.layout +'\r\n\tcontentMain=\"' + variantPath + '\"\r\n}}\r\n';
+      console.log(cleanFileName.split('/')[cleanFileName.split('/').length-1]);
+      templates[mergedVariantPath].precompiled = handlebars.compile(
+        templates[mergedVariantPath].body
+      );
+    });
   }
 
   templates[filePath].precompiled = handlebars.compile(
     templates[filePath].body
   );
+
 };
 
 const removeTemplate = filePath => {
@@ -137,15 +152,6 @@ const loadJsonData = () => {
   if (config.browserSupport.file) {
     try {
       const browserSupportData = require(config.browserSupport.file);
-      nestedProp.set(
-        globalData,
-        config.browserSupport.property,
-        browserSupportData
-      );
-    } catch (e) { }
-
-    try {
-      const componentListData = require(config.browserSupport.file);
       nestedProp.set(
         globalData,
         config.browserSupport.property,
@@ -330,7 +336,7 @@ gulp.task('watch:jsons:hb2', () => {
       loadJsonFile(vinyl.path);
     }
 
-    runSequence('static:hb2', 'livereload','createComponentList');
+    runSequence('static:hb2', 'livereload');
   });
 });
 
