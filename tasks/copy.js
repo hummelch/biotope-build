@@ -278,11 +278,40 @@ gulp.task('copy:dist:json', function () {
     '**',
     '*'
   );
+
   const to = path.join(
     config.global.cwd,
     config.global.dist,
     config.global.resources,
     'json'
+  );
+
+  return copyFiles(from, to);
+});
+
+gulp.task('copy:dev:componentList', function () {
+  const from = path.join(
+    config.global.cwd,
+    'componentList.json'
+  );
+
+  const to = path.join(
+    config.global.cwd,
+    config.global.dev
+  );
+
+  return copyFiles(from, to);
+});
+
+gulp.task('copy:dist:componentList', function () {
+  const from = path.join(
+    config.global.cwd,
+    'componentList.json'
+  );
+
+  const to = path.join(
+    config.global.cwd,
+    config.global.dist
   );
 
   return copyFiles(from, to);

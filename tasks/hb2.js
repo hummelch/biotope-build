@@ -34,23 +34,23 @@ const loadTemplates = () => {
     pathWithBioObject = {};
     templateGlobPatterns = globule.find(templateGlobPatterns);
     templateGlobPatterns.forEach((element) => {
-      pathWithBioObject[element] = {biotope: {isComponent: false}};
+      pathWithBioObject[element] = {isComponent: false};
     });
 
-    config.createComponentList.componentListObject.componentList.forEach((element) => {
-    const componentPath = path.join(config.global.cwd, element.biotope.path);
-    const cleanComponentPath = globule.find(componentPath);
-    if(cleanComponentPath.length) {
-      pathWithBioObject[cleanComponentPath] = element;
+    for(key in config.createComponentList.componentListObject) {
+      const component = config.createComponentList.componentListObject[key];
+      const componentPath = path.join(config.global.cwd, component.path);
+      const cleanComponentPath = globule.find(componentPath);
+      if(cleanComponentPath.length) {
+        pathWithBioObject[cleanComponentPath] = component;
 
+      }
+      templateGlobPatterns.push(componentPath);
     }
-    templateGlobPatterns.push(componentPath);
-    //partialGlobPatterns.push('!' + componentPath);
-  });
   
 
   for (var key in pathWithBioObject) {
-    loadTemplate(key, pathWithBioObject[key].biotope);
+    loadTemplate(key, pathWithBioObject[key]);
   }
   
 };
@@ -73,7 +73,6 @@ const loadTemplate = (filePath, bioObject) => {
       const mergedVariantPath = completeComponentPath + '/' + cleanFileName;
       templates[mergedVariantPath] = {'title': variant.name, 'description': variant.description, 'outputName': (bioObject.category).toLowerCase() + '.' + bioObject.componentName + '-' + cleanFileName.split('/')[cleanFileName.split('/').length-1]};
       templates[mergedVariantPath].body = '{{> '+ bioObject.layout +'\r\n\tcontentMain=\"' + variantPath + '\"\r\n}}\r\n';
-      console.log(cleanFileName.split('/')[cleanFileName.split('/').length-1]);
       templates[mergedVariantPath].precompiled = handlebars.compile(
         templates[mergedVariantPath].body
       );

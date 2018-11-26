@@ -46,6 +46,11 @@ module.exports = {
     browsers: ['last 1 version']
   },
 
+  componentList: {
+    file: path.join(cwd, 'componentList.json'),
+    property: 'data.componentList'
+  },
+
   browserSupport: {
     file: path.join(cwd, 'browserSupport.json'),
     property: 'data.browserSupport'
@@ -81,9 +86,7 @@ module.exports = {
     fileName: 'package.json',
     fallbackEntryPointName: 'index.html',
     outputFileName: 'componentList.json',
-    componentListObject: {
-      componentList: []
-    }
+    componentListObject: {}
   },
 
   cssstats: {
