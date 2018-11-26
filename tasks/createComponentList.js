@@ -12,6 +12,11 @@ gulp.task('createComponentList', function (eb) {
             file = file.replace(config.createComponentList.fileName, '').replace(/\\/g, '/');
             componentData.path = file + (componentData.entryPoint || config.createComponentList.fallbackEntryPointName);
             componentData.url = (componentData.category).toLowerCase() + '.' + componentData.componentName + '.html';
+            componentData.componentVariants.forEach((element, index) => {
+                console.log(element);
+                const cleanFileName = element.file.replace('.hbs', '');
+                componentData.componentVariants[index].url = (componentData.category).toLowerCase() + '.' + componentData.componentName + '-' + cleanFileName.split('/')[cleanFileName.split('/').length-1] + '.html';
+            });
             componentList[componentData.componentName] = componentData;
         });
     }).end(() => {

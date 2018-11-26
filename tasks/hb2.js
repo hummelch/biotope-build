@@ -71,8 +71,10 @@ const loadTemplate = (filePath, bioObject) => {
       const cleanFileName = variant.file.replace('.hbs', '');
       const variantPath = componentRootPath + '/' + variant.file.replace('.hbs', '');
       const mergedVariantPath = completeComponentPath + '/' + cleanFileName;
-      templates[mergedVariantPath] = {'title': variant.name, 'description': variant.description, 'outputName': (bioObject.category).toLowerCase() + '.' + bioObject.componentName + '-' + cleanFileName.split('/')[cleanFileName.split('/').length-1]};
-      templates[mergedVariantPath].body = '{{> '+ bioObject.layout +'\r\n\tcontentMain=\"' + variantPath + '\"\r\n}}\r\n';
+      const outputVariantName =  (bioObject.category).toLowerCase() + '.' + bioObject.componentName + '-' + cleanFileName.split('/')[cleanFileName.split('/').length-1];
+      templates[mergedVariantPath] = {'title': variant.name, 'description': variant.description, 'outputName': outputVariantName};
+      const layout = 'layouts/layout.style-guide';
+      templates[mergedVariantPath].body = '{{> '+ layout +'\r\n\tcontentMain=\"' + variantPath + '\"\r\n}}\r\n';
       templates[mergedVariantPath].precompiled = handlebars.compile(
         templates[mergedVariantPath].body
       );
