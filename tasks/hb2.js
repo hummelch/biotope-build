@@ -12,13 +12,15 @@ const globalData = {};
 
 let templateGlobPatterns = [
   path.join(config.global.cwd, config.global.src, 'browserSupport.hbs'),
+  path.join(config.global.cwd, config.global.src, 'style-guide.hbs'),
   path.join(config.global.cwd, config.global.src, 'index.hbs')
 ];
 
-let partialGlobPatterns = [
+const partialGlobPatterns = [
   path.join(config.global.cwd, config.global.src, '**', '*.hbs'),
   '!' + path.join(config.global.cwd, config.global.src, 'pages', '**', '*.hbs'),
   '!' + path.join(config.global.cwd, config.global.src, 'index.hbs'),
+  '!' + path.join(config.global.cwd, config.global.src, 'style-guide.hbs'),
   '!' + path.join(config.global.cwd, config.global.src, 'browserSupport.hbs')
 ];
 
@@ -31,28 +33,25 @@ const iconGlobPatterns = [
 ];
 
 const loadTemplates = () => {
-    pathWithBioObject = {};
-    templateGlobPatterns = globule.find(templateGlobPatterns);
-    templateGlobPatterns.forEach((element) => {
-      pathWithBioObject[element] = {isComponent: false};
-    });
+  pathWithBioObject = {};
+  templateGlobPatterns = globule.find(templateGlobPatterns);
+  templateGlobPatterns.forEach((element) => {
+    pathWithBioObject[element] = {isComponent: false};
+  });
 
-    for(key in config.createComponentList.componentListObject) {
-      const component = config.createComponentList.componentListObject[key];
-      const componentPath = path.join(config.global.cwd, component.path);
-      const cleanComponentPath = globule.find(componentPath);
-      if(cleanComponentPath.length) {
-        pathWithBioObject[cleanComponentPath] = component;
-
-      }
-      templateGlobPatterns.push(componentPath);
+  for(key in config.createComponentList.componentListObject) {
+    const component = config.createComponentList.componentListObject[key];
+    const componentPath = path.join(config.global.cwd, component.path);
+    const cleanComponentPath = globule.find(componentPath);
+    if(cleanComponentPath.length) {
+      pathWithBioObject[cleanComponentPath] = component;
     }
-  
+    templateGlobPatterns.push(componentPath);
+  }
 
   for (var key in pathWithBioObject) {
     loadTemplate(key, pathWithBioObject[key]);
-  }
-  
+  } 
 };
 
 const loadTemplate = (filePath, bioObject) => {
@@ -62,7 +61,7 @@ const loadTemplate = (filePath, bioObject) => {
     templates[filePath].outputName = templates[filePath].attributes.title;
   } else {
     const componentPath = bioObject.path.replace('src/', '').replace('.hbs', '');
-    templates[filePath] = {'title': bioObject.componentName, 'description': bioObject.description, 'outputName': (bioObject.category).toLowerCase() + '.' + bioObject.componentName};
+    templates[filePath] = {'title': bioObject.componentName, 'description': bioObject.description, 'variant': false, 'category': bioObject.category, 'outputName': (bioObject.category).replace(' ', '_').toLowerCase() + '.' + bioObject.componentName.toLowerCase()};
     templates[filePath].body = '{{> '+ bioObject.layout +'\r\n\tcontentMain=\"' + componentPath + '\"\r\n}}\r\n';
     const completeComponentPath = filePath.substr(0, filePath.lastIndexOf('/'));
     const componentRootPath = componentPath.substr(0, componentPath.lastIndexOf('/'));
@@ -71,8 +70,8 @@ const loadTemplate = (filePath, bioObject) => {
       const cleanFileName = variant.file.replace('.hbs', '');
       const variantPath = componentRootPath + '/' + variant.file.replace('.hbs', '');
       const mergedVariantPath = completeComponentPath + '/' + cleanFileName;
-      const outputVariantName =  (bioObject.category).toLowerCase() + '.' + bioObject.componentName + '-' + cleanFileName.split('/')[cleanFileName.split('/').length-1];
-      templates[mergedVariantPath] = {'title': variant.name, 'description': variant.description, 'outputName': outputVariantName};
+      const outputVariantName =  (bioObject.category).toLowerCase() + '.' + bioObject.componentName.replace(' ', '_').toLowerCase() + '-' + cleanFileName.split('/')[cleanFileName.split('/').length-1];
+      templates[mergedVariantPath] = {'title': variant.name, 'description': variant.description, 'variant': true, 'category': bioObject.category,  'outputName': outputVariantName};
       const layout = 'layouts/layout.style-guide';
       templates[mergedVariantPath].body = '{{> '+ layout +'\r\n\tcontentMain=\"' + variantPath + '\"\r\n}}\r\n';
       templates[mergedVariantPath].precompiled = handlebars.compile(
@@ -231,7 +230,7 @@ const renderTemplate = templatePath => {
   const templateContent = templates[templatePath];
 
   // Extend global data with site specific data
-   nestedProp.set(
+  nestedProp.set(
     globalData,
     [config.global.dataObject, config.frontMatter.property].join('.'),
     templateContent.attributes
@@ -387,8 +386,13 @@ const prepareTemplateDataForIndexr = () => {
     ),
     normalizeWinPath(
       path.join(config.global.cwd, config.global.src, 'browserSupport.hbs')
+    ),
+    normalizeWinPath(
+      path.join(config.global.cwd, config.global.src, 'style-guide.hbs')
     )
   ];
+
+  console.log(templates);
 
   for (const template in templates) {
     if (blacklistedTemplates.indexOf(template) !== -1) {
@@ -397,17 +401,13 @@ const prepareTemplateDataForIndexr = () => {
 
     templates[template].filePath = template;
     templates[template].parsedFile = path.parse(template);
-    templates[template].currentCategory = templates[
-      template
-    ].parsedFile.name.substring(
-      2,
-      templates[template].parsedFile.name.indexOf('.')
-    );
+    templates[template].currentCategory = templates[template].category ;
     templates[template].priority = templates[
       template
-    ].parsedFile.name.substring(0, 2);
-
-    sortedTemplates.push(templates[template]);
+    ].parsedFile.name.substring(0, 1);
+    if(!templates[template].variant) {
+      sortedTemplates.push(templates[template]);
+    }
   }
 
   sortedTemplates.sort((a, b) => {
