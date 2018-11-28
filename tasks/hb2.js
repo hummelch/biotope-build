@@ -392,8 +392,6 @@ const prepareTemplateDataForIndexr = () => {
     )
   ];
 
-  console.log(templates);
-
   for (const template in templates) {
     if (blacklistedTemplates.indexOf(template) !== -1) {
       continue;
