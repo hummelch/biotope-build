@@ -3,7 +3,8 @@ const config = require('./../config');
 const find = require('find');
 const fs = require('fs');
 
-gulp.task('createComponentList', function (eb) {
+gulp.task('createComponentList', function (cb) {
+
   const componentList = {};
   find.eachfile(config.createComponentList.fileName, config.createComponentList.path, file => {
     fs.readFile(file,  (err, data) => {
@@ -11,10 +12,16 @@ gulp.task('createComponentList', function (eb) {
         throw err; 
       }
       const componentData = JSON.parse(data).biotope;
-      file = file.replace(config.createComponentList.fileName, '').replace(/\\/g, '/');
+      file = file.replace(config.createComponentList.fileName, '');
+      const subFile = file;
+      file = file.replace(/\\/g, '/');
+      
       componentData.path = file + (componentData.entryPoint || config.createComponentList.fallbackEntryPointName);
       componentData.url = (componentData.category).toLowerCase() + '.' + componentData.componentName.toLowerCase() + '.html';
       componentData.componentVariants.forEach((element, index) => {
+        fs.readFile(subFile + element.file, 'utf8', (err, hbsData) => {
+          componentData.componentVariants[index].hbs = hbsData;
+        });
         const cleanFileName = element.file.replace('.hbs', '');
         componentData.componentVariants[index].url = (componentData.category).toLowerCase() + '.' + componentData.componentName.toLowerCase() + '-' + cleanFileName.split('/')[cleanFileName.split('/').length-1] + '.html';
       });
@@ -27,6 +34,6 @@ gulp.task('createComponentList', function (eb) {
         throw err;
       }
     });
-    eb();
+    cb();
   });
 });
